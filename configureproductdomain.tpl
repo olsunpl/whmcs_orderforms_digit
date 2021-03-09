@@ -51,7 +51,7 @@
                           <div class="input-group-addon input-group-prepend">
                             <span class="input-group-text">{$LANG.orderForm.www}</span>
                           </div>
-                          <input type="text" id="registersld" value="{$sld}" class="form-control" autocapitalize="none"
+                          <input type="text" id="registersld" placeholder="Wprowadź nazwę domeny np. mojadomena" value="{$sld}" class="form-control" autocapitalize="none"
                             data-toggle="tooltip" data-placement="top" data-trigger="manual"
                             title="{lang key='orderForm.enterDomain'}" />
                         </div>
@@ -89,7 +89,7 @@
                           <div class="input-group-addon input-group-prepend">
                             <span class="input-group-text">{$LANG.orderForm.www}</span>
                           </div>
-                          <input type="text" id="transfersld" value="{$sld}" class="form-control" autocapitalize="none"
+                         <input type="text" id="transfersld" placeholder="Wprowadź nazwę domeny np. mojadomena" value="{$sld}" class="form-control" autocapitalize="none"
                             data-toggle="tooltip" data-placement="top" data-trigger="manual"
                             title="{lang key='orderForm.enterDomain'}" />
                         </div>
@@ -163,7 +163,7 @@
                         <p class="form-control-static">http://</p>
                       </div>
                       <div class="col-xs-5 col-5">
-                        <input type="text" id="subdomainsld" value="{$sld}" placeholder="yourname" class="form-control"
+                      <input type="text" id="subdomainsld" value="{$sld}" placeholder="Wprowadź nazwę domeny np. mojadomena" class="form-control"
                           autocapitalize="none" data-toggle="tooltip" data-placement="top" data-trigger="manual"
                           title="{lang key='orderForm.enterDomain'}" />
                       </div>

@@ -742,6 +742,11 @@ div.domainresults table tr td {
   padding: 5px 30px;
   line-height: 40px;
 }
+
+#order-header {
+background-color: #ffce44;
+}
+
 .domain-checker-container {
   margin: 20px 0;
   padding: 0;
