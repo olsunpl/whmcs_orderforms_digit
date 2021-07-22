@@ -92,7 +92,8 @@
   margin: 0 0 30px 0;
 }
 
-#order-digit label {
+#order-digit label,
+#order-digit p.domain-renewal-desc {
   margin-right: 10px;
   font-weight: 300;
   font-size: 13px;
@@ -116,10 +117,6 @@
   font-size: 16px;
 }
 
-#order-header {
-background-color: #ffce44;
-}
-
 #order-digit .cart-sidebar .list-group-item {
   margin: 0;
   padding: 8px 15px;
@@ -136,9 +133,7 @@ background-color: #ffce44;
 
 #order-digit .sidebar-collapsed {
   margin-top: 20px;
-  margin-bottom: 20px;
   padding: 4px;
-  background-color: #f8f8f8;
   border-radius: 4px;
 }
 @media only screen and (min-width: 1200px) {
@@ -150,10 +145,6 @@ background-color: #ffce44;
   display: block;
   clear: both;
   content: "";
-}
-#order-digit .sidebar-collapsed select {
-  border: 0;
-  color: #222;
 }
 
 /*
@@ -224,7 +215,6 @@ background-color: #ffce44;
 
 #order-digit .products .product div.product-desc {
   float: left;
-  width: 60%;
   padding: 8px 14px;
   font-size: 0.8em;
 }
@@ -1291,7 +1281,6 @@ a.domain-tld-pricing-category {
   }
   .suggested-domains .list-group-item .btn {
     float: none;
-    display: block;
     width: 100%;
   }
 }

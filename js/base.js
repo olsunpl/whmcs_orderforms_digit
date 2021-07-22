@@ -713,7 +713,7 @@ jQuery(document).ready(function () {
     var idnLanguage = jQuery("#idnLanguageSelector"),
       idnLanguageInput = idnLanguage.find("select");
 
-    if (!idnLanguage.not(":visible") && !idnLanguageInput.val()) {
+    if (idnLanguage.is(":visible") && !idnLanguageInput.val()) {
       e.preventDefault();
       idnLanguageInput.showInputError();
       return false;
@@ -875,11 +875,13 @@ jQuery(document).ready(function () {
             spanFullCredit = jQuery("#spanFullCredit"),
             spanUseCredit = jQuery("#spanUseCredit");
           if (data.full) {
+            hideCvcOnCheckoutForExistingCard = "1";
             spanFullCredit.show().find("span").text(data.creditBalance);
             if (spanUseCredit.is(":visible")) {
               spanUseCredit.slideDown();
             }
           } else {
+            hideCvcOnCheckoutForExistingCard = "0";
             spanUseCredit.show().find("span").text(data.creditBalance);
             if (spanFullCredit.is(":visible")) {
               spanFullCredit.slideUp();
@@ -898,10 +900,8 @@ jQuery(document).ready(function () {
             radioClass: "iradio_square-blue",
             increaseArea: "20%",
           });
-          var firstVisible = jQuery('input[name="ccinfo"]:visible').first();
-          if (firstVisible.length) {
-            firstVisible.iCheck("check");
-          }
+          jQuery(".payment-methods:checked").trigger("ifChecked");
+          selectPreferredCard();
         }
       },
       always: function () {
@@ -919,8 +919,7 @@ jQuery(document).ready(function () {
     });
   });
 
-  var existingCards = jQuery(document).find(".existing-card"),
-    cvvFieldContainer = jQuery("#cvv-field-container"),
+  var cvvFieldContainer = jQuery("#cvv-field-container"),
     existingCardContainer = jQuery("#existingCardsContainer"),
     newCardInfo = jQuery("#newCardInfo"),
     newCardSaveSettings = jQuery("#newCardSaveSettings"),
@@ -936,7 +935,11 @@ jQuery(document).ready(function () {
     }
 
     newCardInfo.slideUp().find("input").attr("disabled", "disabled");
-    existingCardInfo.slideDown().find("input").removeAttr("disabled");
+    if (hideCvcOnCheckoutForExistingCard !== "1") {
+      existingCardInfo.slideDown().find("input").removeAttr("disabled");
+    } else {
+      existingCardInfo.slideUp().find("input").attr("disabled", "disabled");
+    }
   });
   newCardOption.on("ifChecked", function (event) {
     newCardSaveSettings.slideDown().find("input").removeAttr("disabled");
@@ -948,11 +951,13 @@ jQuery(document).ready(function () {
     existingCardInfo.slideUp().find("input").attr("disabled", "disabled");
   });
 
-  if (!existingCards.length) {
-    existingCardInfo.slideUp().find("input").attr("disabled", "disabled");
-  }
-
   jQuery(".payment-methods").on("ifChecked", function (event) {
+    var existingCards = jQuery(document).find(".existing-card");
+
+    if (!existingCards.length) {
+      existingCardInfo.slideUp().find("input").attr("disabled", "disabled");
+    }
+
     if (jQuery(this).hasClass("is-credit-card")) {
       var gatewayPaymentType = jQuery(this).data("payment-type"),
         gatewayModule = jQuery(this).val(),
@@ -1031,7 +1036,11 @@ jQuery(document).ready(function () {
         });
 
         existingCardContainer.show();
-        existingCardInfo.show().find("input").removeAttr("disabled");
+        if (hideCvcOnCheckoutForExistingCard !== "1") {
+          existingCardInfo.show().find("input").removeAttr("disabled");
+        } else {
+          existingCardInfo.hide().find("input").attr("disabled", "disabled");
+        }
       } else {
         jQuery(newCardOption).iCheck("check");
         existingCardContainer.hide();
@@ -1045,9 +1054,6 @@ jQuery(document).ready(function () {
       creditCardInputFields.slideUp();
     }
   });
-
-  // make sure relevant payment methods are displayed for the pre-selected gateway
-  jQuery(".payment-methods:checked").trigger("ifChecked");
 
   jQuery(".cc-input-container .paymethod-info").click(function () {
     var payMethodId = $(this).data("paymethod-id");
@@ -1115,6 +1121,15 @@ jQuery(document).ready(function () {
 
   jQuery("#frmDomainChecker").submit(function (e) {
     e.preventDefault();
+
+    if (
+      typeof recaptchaValidationComplete !== "undefined" &&
+      typeof recaptchaType !== "undefined" &&
+      recaptchaType === "invisible" &&
+      recaptchaValidationComplete === false
+    ) {
+      return;
+    }
 
     var frmDomain = jQuery("#frmDomainChecker"),
       inputDomain = jQuery("#inputDomain"),
@@ -1524,15 +1539,24 @@ jQuery(document).ready(function () {
           }
           jQuery("#cartItemCount").html(data.cartCount);
         } else {
-          buttons.hide();
-          buttons.parent().children("span.available.price").hide();
-          buttons.parent().children("button.btn.unavailable").show();
+          buttons.find("span.available.price").hide();
+          buttons.find("span.unavailable").show();
+          buttons.attr("disabled", "disabled");
         }
       });
   });
 
   jQuery("#frmDomainTransfer").submit(function (e) {
     e.preventDefault();
+
+    if (
+      typeof recaptchaValidationComplete !== "undefined" &&
+      typeof recaptchaType !== "undefined" &&
+      recaptchaType === "invisible" &&
+      recaptchaValidationComplete === false
+    ) {
+      return;
+    }
 
     var frmDomain = jQuery("#frmDomainTransfer"),
       transferButton = jQuery("#btnTransferDomain"),
@@ -1901,6 +1925,7 @@ jQuery(document).ready(function () {
     checkoutForm.on("submit", validateCheckoutCreditCardInput);
   }
 
+  jQuery(".payment-methods:checked").trigger("ifChecked");
   if (existingCardContainer.is(":visible")) {
     newCardInfo.slideUp();
   }
@@ -2235,4 +2260,14 @@ function validate_captcha(form) {
       form.trigger("submit");
     }
   });
+}
+
+function selectPreferredCard() {
+  var methods = jQuery('input[name="ccinfo"]:visible'),
+    select = methods.first(),
+    preferred = methods.filter("[data-order-preference=0]");
+  if (preferred.length) {
+    select = preferred;
+  }
+  select.iCheck("check");
 }
