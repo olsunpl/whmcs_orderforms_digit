@@ -3,12 +3,12 @@
     <div class="pull-left form-inline float-left">
         <form>
             <select name="gid" id="gidForm" onchange="javascript:redirectToCartPage()" class="form-control">
-                <optgroup label="Product Categories">
+                <optgroup label="Kategorie">
                     {foreach key=num item=productgroup from=$productgroups}
                         <option value="{$productgroup.routePath}"{if $gid eq $productgroup.gid} selected="selected"{/if}>{$productgroup.name}</option>
                     {/foreach}
                 </optgroup>
-                <optgroup label="Actions">
+                <optgroup label="Akcje">
                     {if $loggedin}
                         <option value="{$WEB_ROOT}/cart.php?gid=addons"{if $gid eq "addons"} selected{/if}>{$LANG.cartproductaddons}</option>
                         {if $renewalsenabled}
